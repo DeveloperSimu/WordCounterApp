@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-efiw4254gc&=lx_z#nd1^+(m&ibdndbq=k$rg3$z*+y9$v#zj@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['wordcounterapp-edw9.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
