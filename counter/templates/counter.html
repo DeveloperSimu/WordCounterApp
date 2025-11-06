@@ -1,0 +1,384 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Word Counter — Ultra Pro Max</title>
+
+  <!-- ✅ Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- ✅ Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- ✅ Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --primary: #00467f;
+      --secondary: #0a2749;
+      --accent: #0fffc3;
+      --neon: #19fbff;
+      --glass: rgba(16,24,56,0.82);
+      --glass-light: rgba(11,22,40,0.58);
+      --dark-bg: #0d1530;
+      --blur: blur(17px);
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--secondary) 40%, #002436 95%);
+      transition: background 1s, color 0.45s;
+      color: #f6feff;
+      overflow-x: hidden;
+      position: relative;
+    }
+    body.light-mode {
+      background: linear-gradient(135deg, #dedff3 38%, #e3f4fd 100%);
+      color: #111f2b;
+    }
+    .parallax-bg {
+      position: fixed;
+      top: -34vh; left: -40vw; width: 150vw; height: 180vh;
+      background:
+          radial-gradient(circle at 48% 40%, #176fb966 26vw, transparent 35vw),
+          radial-gradient(circle at 80% 90%, #08f7c377 21vw, transparent 51vw),
+          radial-gradient(circle at 30% 70%, #00234a99 23vw, transparent 52vw);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.89;
+      transition: filter .4s;
+    }
+    body.light-mode .parallax-bg {
+      filter: brightness(1.1) blur(1.5px);
+      opacity: 0.75;
+    }
+    .particles {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1;
+      pointer-events: none; overflow: visible;
+    }
+
+    .glass-box {
+      position: relative;
+      background: var(--glass);
+      backdrop-filter: blur(15px) saturate(140%);
+      border-radius: 38px;
+      padding: 28px 20px 23px 20px;
+      max-width: 380px;
+      width: 99vw;
+      border: 2.5px solid var(--glass-light);
+      margin: 18px 0;
+      z-index: 10;
+      animation: fadeUp 1s cubic-bezier(0.28,1,0.5,1.12) forwards;
+      box-shadow: 0 8px 34px 0 #099fbb44, 0 2px 12px #1fc9ea38;
+    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(25px);} to { opacity: 1; transform: translateY(0);} }
+
+    h1 {
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.4rem;
+      margin-bottom: 17px;
+      position: relative;
+      letter-spacing: 0.5px;
+      background: linear-gradient(90deg, var(--accent), var(--neon) 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 8px #05f2ab66;
+      animation: shine 4s linear infinite;
+    }
+    @keyframes shine {
+      0%,100% { text-shadow: 0 2px 8px #05f2ab66;}
+      50% { text-shadow: 0 4px 16px #12ddffb2;}
+    }
+    .h1-underline {
+      width: 85px; height: 3px; margin: 0 auto 10px auto;
+      border-radius: 77px;
+      background: linear-gradient(90deg, var(--neon) 60%, #173d7d 100%);
+      position: relative;
+      animation: waveUnderline 2.2s infinite linear;
+    }
+    @keyframes waveUnderline {0%{left:-7px;}50%{left:15px;}100%{left:-7px;}}
+
+    .form-label {
+      font-size: 1.03rem;
+      font-weight: 600;
+      display: block;
+      letter-spacing: 0.2px;
+      color: var(--accent);
+      animation: typing 1.75s steps(30, end);
+      overflow: hidden; white-space: nowrap;
+    }
+    @keyframes typing { 0% { width: 0;} 100% { width: 100%;} }
+
+    textarea {
+      border-radius: 10px;
+      background: rgba(30,40,70,0.24);
+      color: #dafcfa;
+      border: 1.3px solid rgba(22, 244, 255, 0.22);
+      font-size: 0.98rem;
+      transition: 0.3s;
+      min-height: 94px;
+      box-shadow: 0 0 0 0 rgba(16,222,220,0.0);
+      resize: vertical;
+    }
+    textarea:focus {
+      box-shadow: 0 0 0 2px #00cdc644, 0 5px 18px #00c1fb37;
+      outline: none;
+      background: #111e30;
+      color: #0fffc3;
+    }
+    body.light-mode textarea {
+      color: #181838;
+      background: #fefdff;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--accent) 80%);
+      border: none;
+      border-radius: 11px;
+      padding: 8px 20px;
+      font-weight: 600; font-size: 1rem;
+      letter-spacing: 0.6px;
+      color: #eafffd;
+      box-shadow: 0 3px 12px #01819a69;
+      transition: transform 0.16s, box-shadow 0.22s;
+      z-index: 2;
+      cursor: pointer;
+      height: 43px;
+    }
+    .btn-primary::before {
+      content: "";
+      position: absolute;
+      left: -60%;
+      top: 0; width: 100%; height: 100%;
+      background: rgba(17,233,255,0.11);
+      transform: skewX(-17deg);
+      transition: 0.45s;
+      z-index: 1;
+    }
+    .btn-primary:hover {
+      transform: scale(1.04) rotate(-1deg);
+      box-shadow: 0 7px 26px #19efffc9;
+    }
+    .btn-primary:hover::before { left: 130%; }
+
+    .result-card {
+      background: rgba(5,11,33,0.50);
+      border-radius: 10px;
+      border: 1.1px solid #17bacf74;
+      padding: 10px 7px 10px 7px;
+      margin-bottom: 18px;
+      text-align: center;
+      color: #aff;
+      font-size: 1.08rem;
+      font-weight: 600;
+      animation: fadeInResult .68s cubic-bezier(.22, 1, 0.36, 1.04);
+      box-shadow: 0 1px 6px #0af1eb22;
+    }
+    @keyframes fadeInResult { from{opacity:0;transform:translateY(-7px);} to{opacity:1;transform:translateY(0);} }
+    .result-number {
+      display: inline-block;
+      font-size: 1.47rem;
+      font-weight: bold;
+      color: var(--accent);
+      text-shadow: 0 2px 10px #28ebf282;
+      transition: color 0.4s;
+      margin-right: 6px;
+      vertical-align: middle;
+      animation: resultBounce 1.3s infinite alternate cubic-bezier(.42,0,0.45,1.41);
+    }
+    @keyframes resultBounce { from{transform:scale(1);} to{transform:scale(1.07) rotate(-1deg);} }
+
+    .theme-toggle {
+      position: absolute; top: 9px; right: 13px;
+      background: none;
+      border: 1.7px solid #13a3c666;
+      border-radius: 50%;
+      color: #a1fff2;
+      height: 37px; width: 37px;
+      font-size: 1.32rem;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 99;
+      cursor: pointer;
+      transition: border 0.18s, transform 0.18s, color 0.28s;
+    }
+    body.light-mode .theme-toggle { border: 1px solid #11779e56; color: #006;}
+    .theme-toggle:hover { transform: scale(1.11) rotate(24deg); background: #1fe4eb28; }
+
+    .progress-wrap {
+      margin: .45rem 0 .31rem 0; position: relative; width: 100%;
+      height: 11px; border-radius: 6px; background: #03618428;
+      overflow: hidden; box-shadow: 0 1px 4px #09e3ea19;
+    }
+    .progress-bar {
+      height: 100%; border-radius: 7px 0 0 7px;
+      background: linear-gradient(90deg, #29d9e1, #0fffc3 80%);
+      width: 0;
+      min-width: 8px;
+      transition: width .4s cubic-bezier(.6,.1,.4,1.15);
+      box-shadow: 0 1px 3px #09dbe388;
+    }
+    .counter-label {
+      font-size: 0.96rem;
+      font-weight: 700;
+      margin-left: 4px;
+      color: var(--accent);
+      vertical-align: middle;
+      text-shadow: 0 1px 3px #10858c48;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.95rem;
+      margin-top: 21px;
+      color: #f3e7fa;
+      letter-spacing: 0.4px;
+      text-shadow: 0 1px 4px #126e6a36;
+    }
+    body.light-mode footer {
+      color: #355090; text-shadow: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="parallax-bg"></div>
+  <canvas class="particles"></canvas>
+  <div class="glass-box">
+    <button id="themeToggle" class="theme-toggle" title="Toggle Theme">
+      <i data-lucide="moon"></i>
+    </button>
+    <h1>✨ Word Counter Pro Max ✨</h1>
+    <div class="h1-underline"></div>
+    <div class="progress-wrap">
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+    <div class="mb-2 text-end small">
+      <span class="counter-label"><span id="liveCounter">0</span> words</span>
+    </div>
+    {% if i %}
+    <div class="result-card">
+      <span class="result-number" id="numberRise">{{ word }}</span>
+      Word{{ word|pluralize }} in the text
+    </div>
+    {% endif %}
+    <form action="counter" method="POST">
+      {% csrf_token %}
+      <div class="form-group mb-3">
+        <label for="text1" class="form-label">Paste your text here 👇</label>
+        <textarea name="texttocount" id="text1" rows="5" class="form-control" placeholder="Enter your text...">{{ text }}</textarea>
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary">Run Counter 🚀</button>
+      </div>
+    </form>
+    <footer>
+      Made with ❤️ by <b>Srimanta Bag</b> | Powered by Django
+    </footer>
+  </div>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    lucide.createIcons();
+    document.addEventListener('mousemove', (e) => {
+      const bg = document.querySelector(".parallax-bg");
+      if (!bg) return;
+      const x = (e.clientX / window.innerWidth - 0.5) * 45;
+      const y = (e.clientY / window.innerHeight - 0.5) * 37;
+      bg.style.transform = `translate(${x}px,${y}px) scale(1.02)`;
+    });
+    function drawParticles() {
+      const canvas = document.querySelector('.particles');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let w = canvas.width = window.innerWidth, h = canvas.height = window.innerHeight;
+      const colors = ["#20e3c6bb","#044b85b9","#29ecffcc","#10fff855"];
+      let balls = Array.from({length: 16}, () => ({
+        r: Math.random()*11+7,
+        x: Math.random()*w, y: Math.random()*h,
+        dx: Math.random()*1+.32, dy: Math.random()*1+.21,
+        c: colors[Math.floor(Math.random()*colors.length)]
+      }));
+      function draw() {
+        ctx.clearRect(0,0,w,h);
+        for(const b of balls){
+          ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
+          ctx.fillStyle = b.c; ctx.shadowColor = b.c; ctx.shadowBlur = 7;
+          ctx.fill();
+        }
+        update();
+        requestAnimationFrame(draw);
+      }
+      function update() {
+        for(const b of balls){
+          b.x += b.dx*(Math.random()>0.5?1:-1);
+          b.y += b.dy*(Math.random()>0.5?1:-1);
+          b.x = b.x<0 ? w : b.x>w ? 0 : b.x;
+          b.y = b.y<0 ? h : b.y>h ? 0 : b.y;
+        }
+      }
+      draw();
+      window.addEventListener('resize',()=>{w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;});
+    }
+    drawParticles();
+
+    const toggleBtn = document.getElementById('themeToggle');
+    const body = document.body;
+    const recolor = () => {
+      document.querySelectorAll('.particles').forEach(_=> {
+        _.style.opacity = body.classList.contains('light-mode') ? "0.34" : "0.82";
+      });
+    }
+    const currentTheme = localStorage.getItem('theme');
+    if (currentTheme === 'light') {
+      body.classList.add('light-mode');
+      toggleBtn.innerHTML = '<i data-lucide="sun"></i>';
+      lucide.createIcons();
+      recolor();
+    }
+    toggleBtn.addEventListener('click', () => {
+      body.classList.toggle('light-mode');
+      const isLight = body.classList.contains('light-mode');
+      toggleBtn.innerHTML = isLight ? '<i data-lucide="sun"></i>' : '<i data-lucide="moon"></i>';
+      localStorage.setItem('theme', isLight ? 'light':'dark');
+      lucide.createIcons();
+      recolor();
+    });
+
+    function animateNumberRise(targetId, targetNumber) {
+      const node = document.getElementById(targetId);
+      if(node){
+        let now = 0, duration = 680, frame = 18, step = Math.ceil(targetNumber/(duration/frame));
+        const timer = setInterval(()=>{
+          now += step;
+          if(now>=targetNumber){node.textContent=targetNumber;clearInterval(timer);}
+          else{node.textContent=now;}
+        }, frame);
+      }
+    }
+    {% if i %}
+      animateNumberRise('numberRise', {{ word|default_if_none:0 }});
+    {% endif %}
+    const textarea = document.getElementById('text1');
+    const liveCounter = document.getElementById('liveCounter');
+    const progressBar = document.getElementById('progressBar');
+    function wc(txt){ return txt.trim().split(/\s+/).filter(Boolean).length;}
+    function updateWC(){
+      let val = textarea.value||"";
+      let count = wc(val);
+      liveCounter.textContent = count;
+      let percent = Math.min(count, 100)/100;
+      progressBar.style.width = (percent*100)+"%";
+      progressBar.style.opacity = count>0?"1":"0.46";
+    }
+    textarea && textarea.addEventListener('input', updateWC);
+    window.addEventListener('DOMContentLoaded',updateWC);
+  </script>
+</body>
+</html>
