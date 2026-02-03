@@ -3,7 +3,7 @@
 <p align="center">
   <b>A dynamic, modern, and fully responsive Word Counter built using Django (Python), HTML, CSS & JavaScript</b><br>
   <i>Crafted with precision and creativity by</i>  
-  <b>✨ শ্রীমন্ত (Simu) ✨</b>
+  <b>✨ Srimanta (Simu) ✨</b>
 </p>
 
 ---
